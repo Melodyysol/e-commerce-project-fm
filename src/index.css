@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@import url("https://fonts.google.com/specimen/Kumbh+Sans");
+
+@theme {
+  --font-sans: "Kumbh Sans", sans-serif;
+}
