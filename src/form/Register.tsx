@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaLock, FaRegUser, FaUnlock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -10,9 +10,12 @@ import Toast from "../components/Toast";
 export const Register = () => {
   const navigate = useNavigate();
   const [isLock, setIsLock] = useState(true);
-  const [showTootlips, setShowTootLips] = useState(false);
 
   const toastContext = useContext(ToastContext);
+
+  useEffect(() => {
+    document.title = "Register";
+  }, []);
 
   if (!toastContext) {
     throw new Error("toastContext must be provided");
@@ -130,7 +133,10 @@ export const Register = () => {
           <label htmlFor="password" className="label mb-1">
             Password
           </label>
-          <div className="relative">
+          <div
+            className="relative tooltip tooltip-bottom"
+            data-tip={isLock ? "Show password" : "Hide password"}
+          >
             <input
               type={isLock ? "password" : "text"}
               id="password"
@@ -146,23 +152,12 @@ export const Register = () => {
               })}
             />
             <button
-              onMouseEnter={() => {
-                setTimeout(() => {
-                  setShowTootLips(true);
-                }, 2500);
-              }}
-              onMouseLeave={() => setShowTootLips(false)}
               type="button"
               onClick={() => setIsLock((prev) => !prev)}
               className="absolute top-3.5 right-2 cursor-pointer text-base-context hover:opacity-70"
             >
               {isLock ? <FaLock /> : <FaUnlock />}
             </button>
-            {showTootlips && (
-              <span className="absolute text-xs bg-base-300 -bottom-5 -right-5 p-1 rounded-md whitespace-nowrap">
-                {isLock ? "Toggle to show" : "Toggle to hide"}
-              </span>
-            )}
           </div>
 
           {errors.password && (

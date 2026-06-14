@@ -2,7 +2,15 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-
 @theme {
   --font-sans: "Kumbh Sans", sans-serif;
+}
+
+@plugin "daisyui/theme" {
+  name: "winter";
+  default: true;
+}
+
+@plugin "daisyui/theme" {
+  name: "dracula";
 }

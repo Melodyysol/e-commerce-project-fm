@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -10,8 +10,11 @@ import Toast from "../components/Toast";
 
 export const Login = () => {
   const [isLock, setIsLock] = useState(true);
-  const [showTootlips, setShowTootLips] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
 
   const toastContext = useContext(ToastContext);
 
@@ -93,7 +96,10 @@ export const Login = () => {
           <label htmlFor="password" className="label mb-2">
             Password
           </label>
-          <div className="relative">
+          <div
+            className="relative tooltip tooltip-bottom"
+            data-tip={isLock ? "Show password" : "Hide password"}
+          >
             <input
               type={isLock ? "password" : "text"}
               id="password"
@@ -103,23 +109,12 @@ export const Login = () => {
               })}
             />
             <button
-              onMouseEnter={() => {
-                setTimeout(() => {
-                  setShowTootLips(true);
-                }, 2500);
-              }}
-              onMouseLeave={() => setShowTootLips(false)}
               type="button"
               onClick={() => setIsLock((prev) => !prev)}
               className="absolute top-3.5 right-2 cursor-pointer text-base-context hover:opacity-70"
             >
               {isLock ? <FaLock /> : <FaUnlock />}
             </button>
-            {showTootlips && (
-              <span className="absolute text-xs bg-base-300 -bottom-5 -right-5 p-1 rounded-md whitespace-nowrap">
-                {isLock ? "Toggle to show" : "Toggle to hide"}
-              </span>
-            )}
           </div>
           {errors.password && (
             <p className="mt-1 text-sm text-error">{errors.password.message}</p>
