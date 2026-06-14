@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import Header from "../../components/Header";
-import { RenderHomePage } from "./component/RenderHomePage";
+import { ProductItem } from "./component/ProductItem";
 
 export const HomePage = () => {
   useEffect(() => {
@@ -10,7 +10,7 @@ export const HomePage = () => {
   return (
     <main>
       <Header />
-      <RenderHomePage />
+      <ProductItem />
     </main>
   );
 };
