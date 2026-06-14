@@ -10,7 +10,7 @@ import userImage from "../assets/images/image-avatar.png";
 import logo from "../assets/images/logo.svg";
 import { BiMenu } from "react-icons/bi";
 import { Sidebar } from "./Sidebar";
-
+const itemForm: string[] = ["collections", "men", "women", "about", "collect"];
 const Navbar = () => {
   // const { carts } = useContext(CartContext);
   const context = useContext(ThemeContext);
@@ -43,16 +43,21 @@ const Navbar = () => {
       )}
       <div className="mx-auto w-11/12 flex justify-between">
         <div className="relative flex items-center gap-5 justify-between flex-1">
-          <div className="flex items-center gap-x-1">
+          <div className="flex items-center gap-x-1 md:gap-x-20">
             <button
               onClick={() => setShowMenu(true)}
-              className={`hover:bg-base-300 rounded-md text-xl md:text-3xl p-2 md:px-4 md:py-3 cursor-pointer transition-all duration-500`}
+              className={`md:hidden hover:bg-base-300 rounded-md text-xl md:text-3xl p-2 md:px-4 md:py-3 cursor-pointer transition-all duration-500`}
             >
               <BiMenu />
             </button>
             <div>
               <img src={logo} alt="logo" />
             </div>
+            <ul className="hidden md:flex gap-4 items-center">
+              {itemForm.map((item) => (
+                <li key={item} className="text-neutral-content capitalize text-sm cursor-pointer hover:bg-base-content rounded-md px-2 py-1 transition-all duration-500">{item}</li>
+              ))}
+            </ul>
           </div>
         </div>
         <div className="flex gap-5 items-center">

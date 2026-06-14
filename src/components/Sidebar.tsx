@@ -43,7 +43,7 @@ export const Sidebar = ({
           {itemForm.map((item) => (
             <li
               key={item}
-              className="cursor-pointer hover:bg-base-200 px-5 md:px-8 py-2 transition-all duration-500 uppercase"
+              className="cursor-pointer hover:bg-base-200 px-5 md:px-8 py-2 transition-all duration-500 capitalize"
             >
               {item}
             </li>
