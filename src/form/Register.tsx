@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaLock, FaRegUser, FaUnlock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
 import { supabase } from "../lib/supabase";
 import type { FormData } from "../types/form";
+import { ToastContext } from "../hooks/useToast";
+import Toast from "../components/Toast";
 export const Register = () => {
   const navigate = useNavigate();
   const [isLock, setIsLock] = useState(true);
   const [showTootlips, setShowTootLips] = useState(false);
 
+  const toastContext = useContext(ToastContext);
+
+  if (!toastContext) {
+    throw new Error("toastContext must be provided");
+  }
+
   const {
     handleSubmit,
     register,
-    setError,
+    // setError,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
@@ -30,9 +38,18 @@ export const Register = () => {
       });
 
       if (error) {
-        setError("password", {
-          type: "manual",
+        // setError("password", {
+        //   type: "manual",
+        //   message: error.message,
+        // });
+        const newToast = {
+          id: crypto.randomUUID(),
           message: error.message,
+        };
+
+        toastContext.dispatch({
+          type: "error",
+          payload: newToast,
         });
         return;
       }
@@ -171,6 +188,21 @@ export const Register = () => {
           </Link>
         </p>
       </form>
+      <div className=" gap-4 flex flex-col fixed top-5 left-0 right-0 pointer-events-none">
+        {toastContext.toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => {
+              toastContext.dispatch({
+                type: "removeToast",
+                payload: { id: toast.id },
+              });
+            }}
+          />
+        ))}
+      </div>
     </main>
   );
 };

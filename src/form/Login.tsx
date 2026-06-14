@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
 import type { FormData } from "../types/form";
 import { supabase } from "../lib/supabase";
+import { ToastContext } from "../hooks/useToast";
+import Toast from "../components/Toast";
 
 export const Login = () => {
   const [isLock, setIsLock] = useState(true);
   const [showTootlips, setShowTootLips] = useState(false);
   const navigate = useNavigate();
 
+  const toastContext = useContext(ToastContext);
+
+  if (!toastContext) {
+    throw new Error("toastContext must be provided");
+  }
+
   const {
     register,
-    setError,
+    // setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
@@ -26,9 +34,18 @@ export const Login = () => {
       });
 
       if (error) {
-        setError("password", {
-          type: "manual",
+        // setError("password", {
+        //   type: "manual",
+        //   message: error.message,
+        // });
+        const newToast = {
+          id: crypto.randomUUID(),
           message: error.message,
+        };
+
+        toastContext.dispatch({
+          type: "error",
+          payload: newToast,
         });
         throw error;
       }
@@ -129,6 +146,21 @@ export const Login = () => {
           </Link>
         </p>
       </form>
+      <div className=" gap-4 flex flex-col fixed top-5 left-0 right-0 pointer-events-none">
+        {toastContext.toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => {
+              toastContext.dispatch({
+                type: "removeToast",
+                payload: { id: toast.id },
+              });
+            }}
+          />
+        ))}
+      </div>
     </main>
   );
 };
