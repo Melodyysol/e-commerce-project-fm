@@ -2,18 +2,18 @@ import { useState, useContext } from "react";
 
 import { BsCart3 } from "react-icons/bs";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import { Link } from "react-router";
-// import { CartContext } from "../hooks/useCart";
 import { ThemeContext } from "../hooks/useTheme";
 import { useAuth } from "../custom-hooks/useAuth";
 import userImage from "../assets/images/image-avatar.png";
 import logo from "../assets/images/logo.svg";
 import { BiMenu } from "react-icons/bi";
 import { Sidebar } from "./Sidebar";
+import { Cart } from "../pages/home/component/Cart";
+import { useShow } from "../custom-hooks/useShow";
 const itemForm: string[] = ["collections", "men", "women", "about", "collect"];
 const Navbar = () => {
-  // const { carts } = useContext(CartContext);
   const context = useContext(ThemeContext);
+  const { showCart, toggleShow } = useShow();
 
   if (!context) {
     throw new Error("themeContext must be use within ThemeProvider");
@@ -35,9 +35,9 @@ const Navbar = () => {
   // });
 
   return (
-    <nav className="w-screen bg-base-200 py-2">
+    <nav className="relative w-screen bg-base-200 py-2">
       {showMenu && (
-        <div className="fixed inset-0 z-30 bg-neutral-300/30">
+        <div className="fixed inset-0 z-40 bg-neutral-300/30">
           <Sidebar setShowMenu={setShowMenu} />{" "}
         </div>
       )}
@@ -55,7 +55,12 @@ const Navbar = () => {
             </div>
             <ul className="hidden md:flex gap-4 items-center">
               {itemForm.map((item) => (
-                <li key={item} className="text-neutral-content capitalize text-sm cursor-pointer hover:bg-base-content rounded-md px-2 py-1 transition-all duration-500">{item}</li>
+                <li
+                  key={item}
+                  className="text-neutral-content capitalize text-sm cursor-pointer hover:bg-base-content rounded-md px-2 py-1 transition-all duration-500"
+                >
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
@@ -72,23 +77,24 @@ const Navbar = () => {
             )}
           </button>
 
-          <Link
-            to="/cart"
-            className="relative btn btn-ghost btn-circle btn-md cursor-pointer"
-          >
-            <div className="rounded-full text-lg p-1 transition-all duration-500 text-base-content">
+          <div className="relative btn btn-ghost btn-circle btn-md">
+            <button
+              onClick={() => toggleShow("cart")}
+              className="rounded-full cursor-pointer text-lg p-1 transition-all duration-500 text-base-content"
+            >
               <BsCart3 />
-            </div>
+            </button>
 
-            <div className="absolute top-0 right-0 badge badge-xs badge-primary">
+            <span className="absolute top-0 right-0 badge badge-xs badge-primary">
               {totalQuantity}
-            </div>
-          </Link>
-          <div className="w-8">
+            </span>
+          </div>
+          <div className="w-8 cursor-pointer rounded-full hover:border-2 border-accent transition-all duration-500">
             <img src={userImage} alt="user-image" />
           </div>
         </div>
       </div>
+      {showCart && <Cart />}
     </nav>
   );
 };

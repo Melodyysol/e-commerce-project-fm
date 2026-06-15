@@ -133,14 +133,12 @@ export const Register = () => {
           <label htmlFor="password" className="label mb-1">
             Password
           </label>
-          <div
-            className="relative tooltip tooltip-bottom"
-            data-tip={isLock ? "Show password" : "Hide password"}
-          >
+          <div className="relative">
             <input
               type={isLock ? "password" : "text"}
               id="password"
-              className="input input-lg bg-base-300 w-full pr-8"
+              className="input input-lg bg-base-300 w-full pr-8 relative"
+              
               {...register("password", {
                 required: "Password is required",
                 pattern: {
@@ -154,7 +152,8 @@ export const Register = () => {
             <button
               type="button"
               onClick={() => setIsLock((prev) => !prev)}
-              className="absolute top-3.5 right-2 cursor-pointer text-base-context hover:opacity-70"
+              className="absolute top-3.5 right-2 cursor-pointer text-base-context hover:opacity-70 tooltip tooltip-bottom"
+              data-tip={isLock ? "Show password" : "Hide password"}
             >
               {isLock ? <FaLock /> : <FaUnlock />}
             </button>

@@ -96,10 +96,7 @@ export const Login = () => {
           <label htmlFor="password" className="label mb-2">
             Password
           </label>
-          <div
-            className="relative tooltip tooltip-bottom"
-            data-tip={isLock ? "Show password" : "Hide password"}
-          >
+          <div className="relative">
             <input
               type={isLock ? "password" : "text"}
               id="password"
@@ -111,7 +108,8 @@ export const Login = () => {
             <button
               type="button"
               onClick={() => setIsLock((prev) => !prev)}
-              className="absolute top-3.5 right-2 cursor-pointer text-base-context hover:opacity-70"
+              className="absolute top-3.5 right-2 cursor-pointer text-base-context hover:opacity-70 tooltip tooltip-bottom"
+              data-tip={isLock ? "Show password" : "Hide password"}
             >
               {isLock ? <FaLock /> : <FaUnlock />}
             </button>
@@ -127,7 +125,29 @@ export const Login = () => {
         >
           {isSubmitting ? "Login..." : "Login"}
         </button>
-        <button type="button" className="btn btn-secondary">
+        <button
+          onClick={async () => {
+            const { error } = await supabase.auth.signInWithPassword({
+              email: "",
+              password: "",
+            });
+            if (error) {
+              const newToast = {
+                id: crypto.randomUUID(),
+                message: error.message,
+              };
+
+              toastContext.dispatch({
+                type: "error",
+                payload: newToast,
+              });
+              throw error;
+            }
+            return navigate("/")
+          }}
+          type="button"
+          className="btn btn-secondary"
+        >
           Guest
         </button>
 

@@ -3,6 +3,7 @@ import { HomePage } from "./pages/home/HomePage";
 import { Login } from "./form/Login";
 import { Register } from "./form/Register";
 import "./App.css";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Route index element={<HomePage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
