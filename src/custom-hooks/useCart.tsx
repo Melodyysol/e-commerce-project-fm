@@ -46,6 +46,7 @@ export const useCart = () => {
           message: `Error updating quantity: ${error.message}`,
         };
         toastContext.dispatch({ type: "error", payload: newToast });
+        return;
       } else {
         const newToast = {
           id: crypto.randomUUID(),
@@ -66,6 +67,7 @@ export const useCart = () => {
           message: `"Error inserting item:", ${error.message}`,
         };
         toastContext.dispatch({ type: "error", payload: newToast });
+        return;
       } else {
         const newToast = {
           id: crypto.randomUUID(),
@@ -76,5 +78,40 @@ export const useCart = () => {
     }
   };
 
-  return { addToBag };
+  const removeFromCart = async (productId: number) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      const newToast = {
+        id: crypto.randomUUID(),
+        message: "Please login to add sneakers to your cart",
+      };
+      toastContext.dispatch({ type: "error", payload: newToast });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("cart")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("product_id", productId);
+
+    if (error) {
+      const newToast = {
+        id: crypto.randomUUID(),
+        message: `Error: ${error.message}`,
+      };
+      toastContext.dispatch({ type: "error", payload: newToast });
+      return;
+    } else {
+      const newToast = {
+        id: crypto.randomUUID(),
+        message: "Item removed from cart",
+      };
+      toastContext.dispatch({ type: "error", payload: newToast });
+    }
+  };
+
+  return { addToBag, removeFromCart };
 };

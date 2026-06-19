@@ -19,8 +19,10 @@ const fetchProductItem = async (photoId: string): Promise<Product> => {
     }
     return validateItem.data;
   } catch (error) {
-    const message = error instanceof Error;
-    console.log(message);
+    if (error instanceof Error) {
+      throw error;
+    }
+
     throw new Error("Uncaught Error", {
       cause: error,
     });

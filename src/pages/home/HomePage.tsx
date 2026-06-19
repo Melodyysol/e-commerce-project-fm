@@ -1,15 +1,11 @@
-import { useContext } from "react";
 import Header from "../../components/Header";
 import { SearchProduct } from "./components/SearchProduct";
-import { ToastContext } from "../../hooks/useToast";
 import Toast from "../../components/Toast";
 import { RenderProduct } from "./components/RenderProduct";
+import { useToast } from "../../custom-hooks/useToast";
 
 export const HomePage = () => {
-  const toastContext = useContext(ToastContext);
-  if (!toastContext) {
-    throw new Error("toastContext must be use within ToastPrivider");
-  }
+  const toastContext = useToast()
   return (
     <main>
       <Header />
