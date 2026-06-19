@@ -8,12 +8,18 @@ import userImage from "../assets/images/image-avatar.png";
 import logo from "../assets/images/logo.svg";
 import { BiMenu } from "react-icons/bi";
 import { Sidebar } from "./Sidebar";
-import { Cart } from "../pages/home/component/Cart";
+import { Cart } from "../pages/product/component/Cart";
 import { useShow } from "../custom-hooks/useShow";
-const itemForm: string[] = ["collections", "men", "women", "about", "collect"];
+import { NavLink } from "react-router";
+const itemForm: string[] = ["collections", "men", "women", "about", "contact"];
 const Navbar = () => {
   const context = useContext(ThemeContext);
   const { showCart, toggleShow } = useShow();
+
+  const activeClassName = ({ isActive }: { isActive: boolean }) =>
+    isActive
+      ? "text-neutral-content capitalize text-sm cursor-pointer bg-base-content rounded-md px-2 py-1 transition-all duration-500"
+      : "text-neutral-content capitalize text-sm cursor-pointer hover:bg-base-content rounded-md px-2 py-1 transition-all duration-500";
 
   if (!context) {
     throw new Error("themeContext must be use within ThemeProvider");
@@ -46,7 +52,8 @@ const Navbar = () => {
           <div className="flex items-center gap-x-1 md:gap-x-20">
             <button
               onClick={() => setShowMenu(true)}
-              className={`md:hidden hover:bg-base-300 rounded-md text-xl md:text-3xl p-2 md:px-4 md:py-3 cursor-pointer transition-all duration-500`}
+              className={`md:hidden hover:bg-base-300 rounded-md text-xl md:text-3xl p-2 md:px-4 md:py-3 cursor-pointer transition-all duration-500 tooltip tooltip-bottom`}
+              data-tip="Menu"
             >
               <BiMenu />
             </button>
@@ -55,11 +62,16 @@ const Navbar = () => {
             </div>
             <ul className="hidden md:flex gap-4 items-center">
               {itemForm.map((item) => (
-                <li
-                  key={item}
-                  className="text-neutral-content capitalize text-sm cursor-pointer hover:bg-base-content rounded-md px-2 py-1 transition-all duration-500"
-                >
-                  {item}
+                <li key={item}>
+                  <NavLink
+                    to={{
+                      pathname: `/${item}`,
+                      search: `${item}`,
+                    }}
+                    className={activeClassName}
+                  >
+                    {item}
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -68,7 +80,8 @@ const Navbar = () => {
         <div className="flex gap-5 items-center">
           <button
             onClick={toggleTheme}
-            className="cursor-pointer text-xl md:text-2xl"
+            className="cursor-pointer text-xl md:text-2xl tooltip tooltip-bottom"
+            data-tip={theme === "winter" ? "Light mode" : "Dark mode"}
           >
             {theme === "winter" ? (
               <MdDarkMode className="text-base-content" />
@@ -80,7 +93,8 @@ const Navbar = () => {
           <div className="relative btn btn-ghost btn-circle btn-md">
             <button
               onClick={() => toggleShow("cart")}
-              className="rounded-full cursor-pointer text-lg p-1 transition-all duration-500 text-base-content"
+              className="rounded-full cursor-pointer text-lg p-1 transition-all duration-500 text-base-content tooltip tooltip-bottom"
+              data-tip="Cart"
             >
               <BsCart3 />
             </button>
@@ -89,7 +103,10 @@ const Navbar = () => {
               {totalQuantity}
             </span>
           </div>
-          <div className="w-8 cursor-pointer rounded-full hover:border-2 border-accent transition-all duration-500">
+          <div
+            className="w-8 cursor-pointer rounded-full hover:border-2 border-accent transition-all duration-500 tooltip tooltip-bottom"
+            data-tip="Profile"
+          >
             <img src={userImage} alt="user-image" />
           </div>
         </div>

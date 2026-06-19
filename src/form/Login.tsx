@@ -127,10 +127,7 @@ export const Login = () => {
         </button>
         <button
           onClick={async () => {
-            const { error } = await supabase.auth.signInWithPassword({
-              email: "",
-              password: "",
-            });
+            const { error } = await supabase.auth.signInAnonymously();
             if (error) {
               const newToast = {
                 id: crypto.randomUUID(),

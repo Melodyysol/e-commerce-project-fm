@@ -13,7 +13,7 @@ export const Modal = () => {
         >
           <TiTimes />
         </button>
-        <ProductImage />
+        <ProductImage isModal={true} />
       </div>
     </section>
   );

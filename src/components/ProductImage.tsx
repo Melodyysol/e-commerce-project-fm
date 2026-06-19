@@ -19,7 +19,13 @@ const items: { id: number; images: string[]; thumbnails: string[] }[] = [
   },
 ];
 
-export const ProductImage = () => {
+export const ProductImage = ({
+  isModal,
+  image,
+}: {
+  isModal: boolean;
+  image?: string;
+}) => {
   const [currentImage, setCurrentImage] = useState(1);
   const { showModal, toggleShow } = useShow();
 
@@ -32,10 +38,10 @@ export const ProductImage = () => {
           exit={{ opacity: 0, x: 40 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
           key={currentImage}
-          src={items[0].images[currentImage <= 1 ? 0 : currentImage - 1]}
+          src={image}
           alt={`product-${currentImage}`}
-          className={`${showModal ? "md:w-100" : "md:w-[20rem]"} object-cover md:rounded-md md:cursor-pointer`}
-          onClick={() => toggleShow("modal")}
+          className={`${showModal && isModal ? "md:w-100" : "md:w-[20rem] h-64 w-full"} object-cover md:rounded-md md:cursor-pointer`}
+          onClick={() => !isModal && toggleShow("modal")}
         />
       </AnimatePresence>
       <div className="hidden md:flex mt-5 w-[20rem] mx-auto justify-between">
@@ -54,14 +60,14 @@ export const ProductImage = () => {
       <button
         onClick={() => setCurrentImage((prev) => prev - 1)}
         disabled={currentImage <= 1}
-        className={`${showModal ? "md:-left-4 left-4" : "left-4"} disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%] bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
+        className={`${showModal && isModal ? "md:-left-4" : "md:hidden"} left-4  disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%] bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
       >
         <FcPrevious />
       </button>
       <button
         onClick={() => setCurrentImage((prev) => prev + 1)}
         disabled={currentImage >= items[0].images.length}
-        className={`${showModal ? "md:-right-4 right-4" : "right-4"} disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%]  bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
+        className={`${showModal && isModal ? "md:-right-4" : "md:hidden"} right-4 disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%]  bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
       >
         <FcNext />
       </button>
