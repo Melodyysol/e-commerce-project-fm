@@ -1,25 +1,21 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaLock, FaRegUser, FaUnlock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
 import { supabase } from "../lib/supabase";
-import type { FormData } from "../types/form";
-import { ToastContext } from "../hooks/useToast";
+import type { FormData } from "../types/formType";
 import Toast from "../components/Toast";
+import { useToast } from "../custom-hooks/useToast";
 export const Register = () => {
   const navigate = useNavigate();
   const [isLock, setIsLock] = useState(true);
 
-  const toastContext = useContext(ToastContext);
+  const toastContext = useToast();
 
   useEffect(() => {
     document.title = "Register";
   }, []);
-
-  if (!toastContext) {
-    throw new Error("toastContext must be provided");
-  }
 
   const {
     handleSubmit,
@@ -138,7 +134,6 @@ export const Register = () => {
               type={isLock ? "password" : "text"}
               id="password"
               className="input input-lg bg-base-300 w-full pr-8 relative"
-              
               {...register("password", {
                 required: "Password is required",
                 pattern: {

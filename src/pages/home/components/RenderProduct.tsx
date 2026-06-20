@@ -1,43 +1,35 @@
 import { useNavigate } from "react-router";
-import { fetchProduct } from "../../../services/fetchProduct";
-import { useQuery } from "@tanstack/react-query";
-import { Loading } from "../../Loading";
 import { useCart } from "../../../custom-hooks/useCart";
+// import { useToast } from "../../../custom-hooks/useToast";
+import type { Product } from "../../../schemas/productSchema";
 import { useToast } from "../../../custom-hooks/useToast";
-import { useEffect } from "react";
+import { Loading } from "../../Loading";
 
-export const RenderProduct = () => {
+export const RenderProduct = ({
+  products,
+  isError,
+  isLoading,
+  error,
+}: {
+  products: Product[];
+  isError: boolean;
+  isLoading: boolean;
+  error: Error | null;
+}) => {
   const navigate = useNavigate();
-
-  const toastContext = useToast();
 
   const { addToBag } = useCart();
 
-  const {
-    data: products = [],
-    error,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["product"],
-    queryFn: fetchProduct,
-  });
+  const toastContext = useToast();
 
-  useEffect(() => {
-    if (isError) {
-      const newToast = {
-        id: crypto.randomUUID(),
-        message: error.message || "Uncaught error",
-      };
-
-      toastContext.dispatch({
-        type: "error",
-        payload: newToast,
-      });
-      return;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, error]);
+  if (isError) {
+    const newToast = {
+      id: crypto.randomUUID(),
+      message: error?.message || "Uncaugth error occurred",
+    };
+    toastContext.dispatch({ type: "error", payload: newToast });
+    return;
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -46,9 +38,7 @@ export const RenderProduct = () => {
   return (
     <section className="w-10/12 md:w-11/12 mx-auto py-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:pt-12 pt-10 gap-4">
-        {products.length === 0 && (
-          <p>No Product.</p>
-        )}
+        {products.length === 0 && <p>No Product.</p>}
 
         {products.map((product) => (
           <article

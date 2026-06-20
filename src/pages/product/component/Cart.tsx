@@ -1,10 +1,11 @@
 import { BiTrash } from "react-icons/bi";
-import thumbnail1 from "../../../assets/images/image-product-1-thumbnail.jpg";
 import { motion, AnimatePresence } from "motion/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCart } from "../../../services/fetchCart";
 import { useToast } from "../../../custom-hooks/useToast";
 import { useCart } from "../../../custom-hooks/useCart";
+import { useEffect } from "react";
+import { formatCurrency } from "../../../utilities/money";
 
 export const Cart = () => {
   const toastContext = useToast();
@@ -18,16 +19,19 @@ export const Cart = () => {
   } = useQuery({
     queryKey: ["cart"],
     queryFn: fetchCart,
+    throwOnError: false,
   });
 
-  if (isError) {
-    const newToast = {
-      id: crypto.randomUUID(),
-      message: error.message,
-    };
-    toastContext.dispatch({ type: "error", payload: newToast });
-    return;
-  }
+  useEffect(() => {
+    if (isError) {
+      const newToast = {
+        id: crypto.randomUUID(),
+        message: error.message,
+      };
+      toastContext.dispatch({ type: "error", payload: newToast });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, error]);
 
   return (
     <section className="absolute z-30 w-screen top-15 flex justify-center md:justify-end md:right-5">
@@ -54,38 +58,45 @@ export const Cart = () => {
               <p>Your cart is empty</p>
             </div>
           ) : (
-            carts.map((cart) => (
-              <>
-                <article className="flex justify-between w-10/12 mx-auto items-center">
-                  <div>
-                    <img
-                      src={thumbnail1}
-                      alt="img-1"
-                      className="rounded-md w-12 object-cover"
+            carts.map((cart) => {
+              const cost = cart.products.price;
+              const quantity = cart.quantity;
+              const totalCost = cost * quantity;
+              return (
+                <>
+                  <article className="flex justify-between w-10/12 mx-auto items-center">
+                    <div>
+                      <img
+                        src={cart.products.image}
+                        alt="img-1"
+                        className="rounded-md w-12 object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="capitalize text-neutral-content text-sm">
+                        {cart.products.description}
+                      </h4>
+                      <p className="text-sm mt-1 text-neutral-content">
+                        {formatCurrency(cost)} * ${quantity}{" "}
+                        <span className="font-extrabold text-base-content ml-2">
+                          {formatCurrency(totalCost)}
+                        </span>
+                      </p>
+                    </div>
+                    <BiTrash
+                      onClick={() => removeFromCart(cart.product_id)}
+                      className="hover:opacity-50 cursor-pointer tooltip tooltip-bottom"
+                      data-tip="Delete"
                     />
+                  </article>
+                  <div className="w-10/12 mx-auto">
+                    <button className="btn btn-accent btn-block">
+                      Checkout
+                    </button>
                   </div>
-                  <div>
-                    <h4 className="capitalize text-neutral-content text-sm">
-                      Fall limited edition sneakers
-                    </h4>
-                    <p className="text-sm mt-1 text-neutral-content">
-                      $125.00 * ${cart.quantity}{" "}
-                      <span className="font-extrabold text-base-content ml-2">
-                        $375.00
-                      </span>
-                    </p>
-                  </div>
-                  <BiTrash
-                    onClick={() => removeFromCart(cart.product_id)}
-                    className="hover:opacity-50 cursor-pointer tooltip tooltip-bottom"
-                    data-tip="Delete"
-                  />
-                </article>
-                <div className="w-10/12 mx-auto">
-                  <button className="btn btn-accent btn-block">Checkout</button>
-                </div>
-              </>
-            ))
+                </>
+              );
+            })
           )}
         </motion.div>
       </AnimatePresence>

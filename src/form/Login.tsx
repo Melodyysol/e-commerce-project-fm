@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
-import type { FormData } from "../types/form";
+import type { FormData } from "../types/formType";
 import { supabase } from "../lib/supabase";
-import { ToastContext } from "../hooks/useToast";
 import Toast from "../components/Toast";
+import { useToast } from "../custom-hooks/useToast";
 
 export const Login = () => {
   const [isLock, setIsLock] = useState(true);
@@ -16,11 +16,7 @@ export const Login = () => {
     document.title = "Login";
   }, []);
 
-  const toastContext = useContext(ToastContext);
-
-  if (!toastContext) {
-    throw new Error("toastContext must be provided");
-  }
+  const toastContext = useToast();
 
   const {
     register,
@@ -140,7 +136,7 @@ export const Login = () => {
               });
               throw error;
             }
-            return navigate("/")
+            return navigate("/");
           }}
           type="button"
           className="btn btn-secondary"

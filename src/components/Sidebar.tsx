@@ -1,21 +1,14 @@
-// import { NavLink } from "react-router";
-// import { useAuth } from "../custom-hooks/useAuth";
 import { AnimatePresence, motion } from "motion/react";
 import { TiTimes } from "react-icons/ti";
+import { useCategory } from "../custom-hooks/useCategory";
+import { categoryItem, pageItem } from "../utilities/category";
 import { NavLink } from "react-router";
-
-const itemForm: string[] = ["collections", "men", "women", "about", "collect"];
 
 export const Sidebar = ({
   setShowMenu,
 }: {
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  // const activeLink = ({ isActive }: { isActive: boolean }) =>
-  //   isActive
-  //     ? `bg-neutral text-neutral-content rounded-lg px-3 py-1 md:px-4 md:py-2 text-sm w-full block`
-  //     : `text-base-content hover:bg-base-200 md:hover:bg-base-300 rounded-lg px-3 py-1 text-sm md:px-4 md:py-2 transition-all duration-500 w-full block`;
-
   const variants = {
     hidden: { opacity: 1, width: 0 },
     show: { opacity: 1, width: "100%" },
@@ -25,10 +18,12 @@ export const Sidebar = ({
     },
   };
 
-  const activeClassName = ({ isActive }: { isActive: boolean }) =>
+  const { category, changeCategory } = useCategory();
+
+  const activeClassPage = ({ isActive }: { isActive: boolean }) =>
     isActive
-      ? "cursor-pointer bg-base-200 px-5 md:px-8 py-2 transition-all duration-500 capitalize"
-      : "cursor-pointer hover:bg-base-200 px-5 md:px-8 py-2 transition-all duration-500 capitalize";
+      ? "cursor-pointer px-5 md:px-8 py-2 transition-all duration-500 capitalize bg-base-200"
+      : "cursor-pointer px-5 md:px-8 py-2 transition-all duration-500 capitalize hover:bg-base-200";
 
   return (
     <AnimatePresence mode="wait">
@@ -47,15 +42,18 @@ export const Sidebar = ({
           <TiTimes className="cursor-pointer hover:opacity-70 transition-all duration-500" />
         </button>
         <motion.ul layout className="flex flex-col font-extrabold py-10">
-          {itemForm.map((item) => (
-            <NavLink
-              to={{
-                pathname: `/${item}`,
-                search: `${item}`,
-              }}
-              className={activeClassName}
+          {categoryItem.map((item) => (
+            <li
+              onClick={() => changeCategory(item)}
+              key={item}
+              className={`cursor-pointer px-5 md:px-8 py-2 transition-all duration-500 capitalize ${category === item ? "bg-base-200" : "hover:bg-base-200"}`}
             >
-              <li key={item}>{item}</li>
+              {item}
+            </li>
+          ))}
+          {pageItem.map((page) => (
+            <NavLink className={activeClassPage} key={page} to={`/${page}`}>
+              <li>{page}</li>
             </NavLink>
           ))}
         </motion.ul>

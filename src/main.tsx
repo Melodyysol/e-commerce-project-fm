@@ -8,6 +8,7 @@ import ToastProvider from "./contexts/ToastContext.tsx";
 import { ShowProvider } from "./contexts/ShowContext.tsx";
 import { CartProvider } from "./contexts/CartContext.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CategoryProvider from "./contexts/CategoryContext.tsx";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,9 @@ createRoot(document.getElementById("root")!).render(
           <AuthProvider>
             <ToastProvider>
               <ShowProvider>
-                <App />
+                <CategoryProvider>
+                  <App />
+                </CategoryProvider>
               </ShowProvider>
             </ToastProvider>
           </AuthProvider>

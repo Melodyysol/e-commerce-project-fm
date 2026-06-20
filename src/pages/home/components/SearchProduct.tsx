@@ -1,21 +1,20 @@
-import { useContext } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { BiSearch } from "react-icons/bi";
-import { ToastContext } from "../../../hooks/useToast";
 
-export const SearchProduct = () => {
-  const toastContext = useContext(ToastContext);
-  if (!toastContext) {
-    throw new Error("toastContext must be used within ToastProvider");
-  }
+export const SearchProduct = ({
+  setSearch,
+}: {
+  setSearch: (search: string) => void;
+}) => {
+  // const toastContext = useToast();
 
   const {
     handleSubmit,
     register,
     formState: { isSubmitting },
   } = useForm<{ search: string }>();
-  const onSearch: SubmitHandler<{ search: string }> = (data) => {
-    console.log(data.search);
+  const onSearch: SubmitHandler<{ search: string }> = async (data) => {
+    setSearch(data.search);
   };
 
   // useEffect(() => {
@@ -58,6 +57,7 @@ export const SearchProduct = () => {
         </div>
         <button
           type="submit"
+          disabled={isSubmitting}
           className={`btn btn-primary btn-sm md:btn-md ${isSubmitting && "btn-ghost"}`}
         >
           {isSubmitting ? "Searching" : "Search"}

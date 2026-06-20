@@ -10,16 +10,19 @@ import { BiMenu } from "react-icons/bi";
 import { Sidebar } from "./Sidebar";
 import { Cart } from "../pages/product/component/Cart";
 import { useShow } from "../custom-hooks/useShow";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCart } from "../services/fetchCart";
+import { useCategory } from "../custom-hooks/useCategory";
+import { categoryItem, pageItem } from "../utilities/category";
 import { NavLink } from "react-router";
-const itemForm: string[] = ["collections", "men", "women", "about", "contact"];
 const Navbar = () => {
   const context = useContext(ThemeContext);
   const { showCart, toggleShow } = useShow();
 
-  const activeClassName = ({ isActive }: { isActive: boolean }) =>
-    isActive
-      ? "text-neutral-content capitalize text-sm cursor-pointer bg-base-content rounded-md px-2 py-1 transition-all duration-500"
-      : "text-neutral-content capitalize text-sm cursor-pointer hover:bg-base-content rounded-md px-2 py-1 transition-all duration-500";
+  const { data: carts = [] } = useQuery({
+    queryKey: ["cart"],
+    queryFn: fetchCart,
+  });
 
   if (!context) {
     throw new Error("themeContext must be use within ThemeProvider");
@@ -29,16 +32,26 @@ const Navbar = () => {
   const currentUser = useAuth();
 
   const [showMenu, setShowMenu] = useState(false);
+  const { category, changeCategory } = useCategory();
 
-  const totalQuantity = 0;
+  const activeClassPage = ({ isActive }: { isActive: boolean }) =>
+    isActive
+      ? "text-neutral-content capitalize text-sm cursor-pointer rounded-md px-2 py-1 transition-all duration-500 bg-base-content"
+      : "text-neutral-content capitalize text-sm cursor-pointer rounded-md px-2 py-1 transition-all duration-500 hover:bg-base-content";
+
+  let totalQuantity = 0;
+  // for (let i = 0; i < carts.length; i++) {
+  //   const quantity = carts[i].quantity;
+  //   totalQuantity += quantity;
+  // }
 
   if (!currentUser) {
     throw new Error("useUser must be used within UserProvider");
   }
 
-  // carts.map((cart) => {
-  //   totalQuantity = totalQuantity + cart.quantity;
-  // });
+  carts.map((cart) => {
+    totalQuantity = totalQuantity + cart.quantity;
+  });
 
   return (
     <nav className="relative w-screen bg-base-200 py-2">
@@ -61,18 +74,19 @@ const Navbar = () => {
               <img src={logo} alt="logo" />
             </div>
             <ul className="hidden md:flex gap-4 items-center">
-              {itemForm.map((item) => (
-                <li key={item}>
-                  <NavLink
-                    to={{
-                      pathname: `/${item}`,
-                      search: `${item}`,
-                    }}
-                    className={activeClassName}
-                  >
-                    {item}
-                  </NavLink>
+              {categoryItem.map((item) => (
+                <li
+                  key={item}
+                  className={`text-neutral-content capitalize text-sm cursor-pointer rounded-md px-2 py-1 transition-all duration-500 ${category === item ? "bg-base-content" : "hover:bg-base-content"}`}
+                  onClick={() => changeCategory(item)}
+                >
+                  {item}
                 </li>
+              ))}
+              {pageItem.map((page) => (
+                <NavLink className={activeClassPage} key={page} to={`/${page}`}>
+                  <li>{page}</li>
+                </NavLink>
               ))}
             </ul>
           </div>
