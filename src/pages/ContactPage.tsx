@@ -1,12 +1,9 @@
 import Header from "../components/Header";
 
-export const AboutPage = () => {
+export const ContactPage = () => {
   return (
     <main>
       <Header />
-      <section>
-        
-      </section>
     </main>
   );
 };

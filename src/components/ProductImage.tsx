@@ -1,4 +1,5 @@
-import { FcNext, FcPrevious } from "react-icons/fc";
+import NextIcon from "../../public/icons/icon-next.svg";
+import PrevIcon from "../../public/icons/icon-next.svg";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import product1 from "../assets/images/image-product-1.jpg";
@@ -62,14 +63,14 @@ export const ProductImage = ({
         disabled={currentImage <= 1}
         className={`${showModal && isModal ? "md:-left-4" : "md:hidden"} left-4  disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%] bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
       >
-        <FcPrevious />
+        <img src={PrevIcon} alt="previous icon" />
       </button>
       <button
         onClick={() => setCurrentImage((prev) => prev + 1)}
         disabled={currentImage >= items[0].images.length}
         className={`${showModal && isModal ? "md:-right-4" : "md:hidden"} right-4 disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%]  bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
       >
-        <FcNext />
+        <img src={NextIcon} alt="next icon" />
       </button>
     </div>
   );

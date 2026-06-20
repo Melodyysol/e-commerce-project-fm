@@ -5,6 +5,8 @@ import { Register } from "./form/Register";
 import "./App.css";
 import NotFoundPage from "./pages/NotFoundPage";
 import { HomePage } from "./pages/home/HomePage";
+import { AboutPage } from "./pages/AboutPage";
+import { ContactPage } from "./pages/ContactPage";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
     </Routes>
   );
 }

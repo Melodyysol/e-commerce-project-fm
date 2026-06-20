@@ -34,10 +34,10 @@ export const SearchProduct = ({
   // }, [errors, toastContext]);
 
   return (
-    <section className="fixed left-0 right-0 z-20 py-10">
+    <section className="fixed left-0 right-0 z-20 py-10 pointer-events-none">
       <form
         onSubmit={handleSubmit(onSearch)}
-        className="flex gap-2 items-center w-10/12 mx-auto"
+        className="flex gap-2 items-center w-10/12 mx-auto pointer-events-auto"
       >
         <div className="w-full max-w-70 relative">
           <input

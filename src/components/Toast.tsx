@@ -1,7 +1,6 @@
-import { FaTimes } from "react-icons/fa";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-
+import CloseIcon from "../../public/icons/icon-close.svg";
 const Toast = ({
   message,
   type,
@@ -39,9 +38,9 @@ const Toast = ({
 
   return (
     <motion.div
-      initial={{opacity: 0, y: -40}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.35, ease: "easeInOut"}}
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
       onMouseEnter={() => {
         clearInterval(intervalRef.current);
       }}
@@ -52,7 +51,7 @@ const Toast = ({
 
         return () => clearInterval(intervalRef.current);
       }}
-      className="w-70 rounded bg-base-100 shadow-md mx-auto pointer-events-auto"
+      className="w-70 rounded bg-base-100 shadow-md mx-auto pointer-events-auto z-50"
     >
       <div className="relative items-center flex gap-4 py-4 pl-3 rounded border border-neutral-content">
         <div
@@ -61,13 +60,15 @@ const Toast = ({
           !
         </div>
         <p>{message}</p>
-        <FaTimes
+        <button
           onClick={onClose}
           className="absolute top-2 right-2 cursor-pointer text-neutral-content hover:text-base-content transition-all duration-500"
-        />
+        >
+          <img src={CloseIcon} alt="close icon" />
+        </button>
         <motion.div
           className={`h-1 ${type === "error" ? "bg-error " : "bg-success "} absolute bottom-0 left-0 rounded-bl`}
-          style={{width: `${duration}%`}}
+          style={{ width: `${duration}%` }}
         ></motion.div>
       </div>
     </motion.div>

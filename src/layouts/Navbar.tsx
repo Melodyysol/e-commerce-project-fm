@@ -1,12 +1,11 @@
 import { useState, useContext } from "react";
 
-import { BsCart3 } from "react-icons/bs";
+import CartIcon from "../../public/icons/icon-cart.svg";
+import MenuIcon from "../../public/icons/icon-menu.svg";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { ThemeContext } from "../hooks/useTheme";
-import { useAuth } from "../custom-hooks/useAuth";
 import userImage from "../assets/images/image-avatar.png";
 import logo from "../assets/images/logo.svg";
-import { BiMenu } from "react-icons/bi";
 import { Sidebar } from "./Sidebar";
 import { Cart } from "../pages/product/component/Cart";
 import { useShow } from "../custom-hooks/useShow";
@@ -14,10 +13,12 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCart } from "../services/fetchCart";
 import { useCategory } from "../custom-hooks/useCategory";
 import { categoryItem, pageItem } from "../utilities/category";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { Profile } from "../pages/product/component/Profile";
 const Navbar = () => {
   const context = useContext(ThemeContext);
-  const { showCart, toggleShow } = useShow();
+  const { showCart, toggleShow, showProfile } = useShow();
+  const navigate = useNavigate();
 
   const { data: carts = [] } = useQuery({
     queryKey: ["cart"],
@@ -29,9 +30,8 @@ const Navbar = () => {
   }
   const { theme, toggleTheme } = context;
 
-  const currentUser = useAuth();
-
   const [showMenu, setShowMenu] = useState(false);
+  const [userProfile, setUserProfile] = useState(userImage);
   const { category, changeCategory } = useCategory();
 
   const activeClassPage = ({ isActive }: { isActive: boolean }) =>
@@ -44,10 +44,6 @@ const Navbar = () => {
   //   const quantity = carts[i].quantity;
   //   totalQuantity += quantity;
   // }
-
-  if (!currentUser) {
-    throw new Error("useUser must be used within UserProvider");
-  }
 
   carts.map((cart) => {
     totalQuantity = totalQuantity + cart.quantity;
@@ -68,7 +64,7 @@ const Navbar = () => {
               className={`md:hidden hover:bg-base-300 rounded-md text-xl md:text-3xl p-2 md:px-4 md:py-3 cursor-pointer transition-all duration-500 tooltip tooltip-bottom`}
               data-tip="Menu"
             >
-              <BiMenu />
+              <img src={MenuIcon} alt="menu-icon" />
             </button>
             <div>
               <img src={logo} alt="logo" />
@@ -78,7 +74,10 @@ const Navbar = () => {
                 <li
                   key={item}
                   className={`text-neutral-content capitalize text-sm cursor-pointer rounded-md px-2 py-1 transition-all duration-500 ${category === item ? "bg-base-content" : "hover:bg-base-content"}`}
-                  onClick={() => changeCategory(item)}
+                  onClick={() => {
+                    changeCategory(item);
+                    navigate("/");
+                  }}
                 >
                   {item}
                 </li>
@@ -104,28 +103,32 @@ const Navbar = () => {
             )}
           </button>
 
-          <div className="relative btn btn-ghost btn-circle btn-md">
-            <button
-              onClick={() => toggleShow("cart")}
-              className="rounded-full cursor-pointer text-lg p-1 transition-all duration-500 text-base-content tooltip tooltip-bottom"
-              data-tip="Cart"
-            >
-              <BsCart3 />
-            </button>
+          <button
+            onClick={() => toggleShow("cart")}
+            className="relative btn btn-ghost btn-circle btn-md tooltip tooltip-bottom"
+            data-tip="Cart"
+          >
+            <span className="rounded-full cursor-pointer text-lg p-1 transition-all duration-500 text-base-content">
+              <img src={CartIcon} alt="cart-icon" />
+            </span>
 
             <span className="absolute top-0 right-0 badge badge-xs badge-primary">
               {totalQuantity}
             </span>
-          </div>
-          <div
+          </button>
+          <button
+            onClick={() => toggleShow("profile")}
             className="w-8 cursor-pointer rounded-full hover:border-2 border-accent transition-all duration-500 tooltip tooltip-bottom"
             data-tip="Profile"
           >
-            <img src={userImage} alt="user-image" />
-          </div>
+            <img src={userProfile} alt="user-image" />
+          </button>
         </div>
       </div>
       {showCart && <Cart />}
+      {showProfile && (
+        <Profile userProfile={userProfile} setUserProfile={setUserProfile} />
+      )}
     </nav>
   );
 };

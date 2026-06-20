@@ -1,4 +1,6 @@
-import { BiCart, BiMinus, BiPlus } from "react-icons/bi";
+import CartIcon from "../../../../public/icons/icon-cart.svg";
+import MinusIcon from "../../../../public/icons/icon-minus.svg";
+import PlusIcon from "../../../../public/icons/icon-plus.svg";
 
 import { ProductImage } from "../../../components/ProductImage";
 import { useParams } from "react-router";
@@ -86,11 +88,11 @@ export const RenderProductItem = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
             <div className="bg-base-200 rounded-md py-2 px-4 flex justify-between">
               <button className="text-2xl text-accent cursor-pointer hover:opacity-70">
-                <BiMinus />
+                <img src={MinusIcon} alt="minus icon" />
               </button>
               <span>0</span>
               <button className="text-2xl text-accent cursor-pointer hover:opacity-70">
-                <BiPlus />
+                <img src={PlusIcon} alt="plus icon" />
               </button>
             </div>
             <button
@@ -98,7 +100,7 @@ export const RenderProductItem = () => {
               type="button"
               className="btn btn-accent btn-block"
             >
-              <BiCart />
+              <img src={CartIcon} alt="cart icon" />
               Add to cart
             </button>
           </div>

@@ -1,4 +1,4 @@
-import { BiTrash } from "react-icons/bi";
+import DeleteIcon from "../../../../public/icons/icon-delete.svg";
 import { motion, AnimatePresence } from "motion/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCart } from "../../../services/fetchCart";
@@ -34,14 +34,14 @@ export const Cart = () => {
   }, [isError, error]);
 
   return (
-    <section className="absolute z-30 w-screen top-15 flex justify-center md:justify-end md:right-5">
+    <section className="absolute z-30 w-screen top-15 flex justify-center md:justify-end md:right-5 pointer-events-none">
       <AnimatePresence mode="wait">
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="bg-base-200 rounded-md w-11/12 py-5 flex flex-col gap-5 shadow-2xl md:w-84"
+          className="bg-base-200 rounded-md w-11/12 py-5 flex flex-col gap-5 shadow-2xl md:w-84 pointer-events-auto"
         >
           <div className="w-10/12 mx-auto">
             <h1 className="font-extrabold">Cart</h1>
@@ -68,7 +68,7 @@ export const Cart = () => {
                     <div>
                       <img
                         src={cart.products.image}
-                        alt="img-1"
+                        alt={cart.products.description}
                         className="rounded-md w-12 object-cover"
                       />
                     </div>
@@ -83,11 +83,13 @@ export const Cart = () => {
                         </span>
                       </p>
                     </div>
-                    <BiTrash
+                    <button
                       onClick={() => removeFromCart(cart.product_id)}
                       className="hover:opacity-50 cursor-pointer tooltip tooltip-bottom"
                       data-tip="Delete"
-                    />
+                    >
+                      <img src={DeleteIcon} alt="delete-icon" />
+                    </button>
                   </article>
                   <div className="w-10/12 mx-auto">
                     <button className="btn btn-accent btn-block">

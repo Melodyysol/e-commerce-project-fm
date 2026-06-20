@@ -1,4 +1,4 @@
-import { TiTimes } from "react-icons/ti";
+import CloseIcon from "../../../../public/icons/icon-close.svg";
 import { ProductImage } from "../../../components/ProductImage";
 import { useShow } from "../../../custom-hooks/useShow";
 
@@ -11,7 +11,7 @@ export const Modal = () => {
           onClick={() => toggleShow("modal")}
           className="absolute -top-10 right-0 text-3xl hover:text-accent cursor-pointer"
         >
-          <TiTimes />
+          <img src={CloseIcon} alt="close icon" />
         </button>
         <ProductImage isModal={true} />
       </div>

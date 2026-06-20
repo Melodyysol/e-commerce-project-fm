@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
-import { TiTimes } from "react-icons/ti";
+import CloseIcon from "../../public/icons/icon-close.svg";
 import { useCategory } from "../custom-hooks/useCategory";
 import { categoryItem, pageItem } from "../utilities/category";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 export const Sidebar = ({
   setShowMenu,
@@ -17,6 +17,7 @@ export const Sidebar = ({
       beforeChildren: 0.3,
     },
   };
+  const navigate = useNavigate();
 
   const { category, changeCategory } = useCategory();
 
@@ -39,12 +40,19 @@ export const Sidebar = ({
           onClick={() => setShowMenu(false)}
           className="text-2xl px-4 md:px-8"
         >
-          <TiTimes className="cursor-pointer hover:opacity-70 transition-all duration-500" />
+          <img
+            src={CloseIcon}
+            alt="close icon"
+            className="cursor-pointer hover:opacity-70 transition-all duration-500"
+          />
         </button>
         <motion.ul layout className="flex flex-col font-extrabold py-10">
           {categoryItem.map((item) => (
             <li
-              onClick={() => changeCategory(item)}
+              onClick={() => {
+                changeCategory(item);
+                navigate("/");
+              }}
               key={item}
               className={`cursor-pointer px-5 md:px-8 py-2 transition-all duration-500 capitalize ${category === item ? "bg-base-200" : "hover:bg-base-200"}`}
             >

@@ -1,16 +1,15 @@
 import { Link, useNavigate } from "react-router";
-import Navbar from "./Navbar";
+import Navbar from "../layouts/Navbar";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { useAuth } from "../custom-hooks/useAuth";
 import { supabase } from "../lib/supabase";
 
 const Header = () => {
   const navigate = useNavigate();
-  const context = useAuth()
-
+  const context = useAuth();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    await supabase.auth.signOut();
     navigate("/login");
   };
 
@@ -21,8 +20,7 @@ const Header = () => {
           {context.user ? (
             <>
               <h1 className="text-[12px] sm:text-sm text-gray-400">
-                Hello!{" "}
-                {context.user?.email}
+                Hello! {context.user?.email || "demo user"}
               </h1>
 
               <button

@@ -5,7 +5,7 @@ import { RenderProduct } from "./components/RenderProduct";
 import { useToast } from "../../custom-hooks/useToast";
 import { fetchProduct } from "../../services/fetchProduct";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCategory } from "../../custom-hooks/useCategory";
 
 export const HomePage = () => {
@@ -28,6 +28,10 @@ export const HomePage = () => {
   filteredProduct = filteredProduct.filter((product) =>
     category === "collections" ? product : category === product.category,
   );
+
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
 
   return (
     <main>
