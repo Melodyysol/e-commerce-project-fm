@@ -31,6 +31,9 @@ npm run dev
 
 Open `http://localhost:5173` after the dev server starts.
 
+## Live Link
+- Vercel `e-commerce-project-fm.vercel.app`
+
 ## Scripts
 
 - `npm run dev` — start the development server
