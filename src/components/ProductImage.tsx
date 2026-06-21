@@ -1,24 +1,10 @@
-import NextIcon from "../../public/icons/icon-next.svg";
-import PrevIcon from "../../public/icons/icon-next.svg";
+import NextIcon from "../assets/icons/icon-next.svg";
+import PrevIcon from "../assets/icons/icon-previous.svg";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import product1 from "../assets/images/image-product-1.jpg";
-import product2 from "../assets/images/image-product-2.jpg";
-import product3 from "../assets/images/image-product-3.jpg";
-import product4 from "../assets/images/image-product-4.jpg";
-import thumbnail1 from "../assets/images/image-product-1-thumbnail.jpg";
-import thumbnail2 from "../assets/images/image-product-2-thumbnail.jpg";
-import thumbnail3 from "../assets/images/image-product-3-thumbnail.jpg";
-import thumbnail4 from "../assets/images/image-product-4-thumbnail.jpg";
 import { useShow } from "../custom-hooks/useShow";
-
-const items: { id: number; images: string[]; thumbnails: string[] }[] = [
-  {
-    id: 1,
-    images: [product1, product2, product3, product4],
-    thumbnails: [thumbnail1, thumbnail2, thumbnail3, thumbnail4],
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { fetchProduct } from "../services/fetchProduct";
 
 export const ProductImage = ({
   isModal,
@@ -27,8 +13,27 @@ export const ProductImage = ({
   isModal: boolean;
   image?: string;
 }) => {
-  const [currentImage, setCurrentImage] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { showModal, toggleShow } = useShow();
+
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["product"],
+    queryFn: () => fetchProduct(""),
+    throwOnError: false,
+  });
+
+  if (isLoading || products.length === 0) {
+    return (
+      <div className="animate-pulse bg-base-300 rounded-md h-64 w-full md:w-[20rem]" />
+    );
+  }
+
+  const startProduct = products.findIndex((product) => product.image === image);
+  const safeStart = startProduct === -1 ? 0 : startProduct;
+  const endProduct = safeStart + 4;
+  const items = products.slice(safeStart, endProduct);
+
+  if (items.length === 0) return <p>No Item Found!</p>;
 
   return (
     <div className="relative">
@@ -38,36 +43,34 @@ export const ProductImage = ({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 40 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
-          key={currentImage}
-          src={image}
-          alt={`product-${currentImage}`}
-          className={`${showModal && isModal ? "md:w-100" : "md:w-[20rem] h-64 w-full"} object-cover md:rounded-md md:cursor-pointer`}
+          key={currentImageIndex}
+          src={items[currentImageIndex].image}
+          alt={`product-${currentImageIndex}`}
+          className={`${showModal && isModal ? "md:w-100 h-96" : "md:w-[20rem] h-64 w-full"} object-cover md:rounded-md md:cursor-pointer`}
           onClick={() => !isModal && toggleShow("modal")}
         />
       </AnimatePresence>
       <div className="hidden md:flex mt-5 w-[20rem] mx-auto justify-between">
-        {items.map((item) =>
-          item.thumbnails.map((thumbnail, index) => (
-            <img
-              onClick={() => setCurrentImage(index + 1)}
-              key={index}
-              src={thumbnail}
-              alt={thumbnail}
-              className={`rounded-md w-16 cursor-pointer hover:opacity-50  ${currentImage === index + 1 ? "opacity-30 border-2 border-accent" : ""}`}
-            />
-          )),
-        )}
+        {items.map((item, index) => (
+          <img
+            onClick={() => setCurrentImageIndex(index)}
+            key={item.id || index}
+            src={item.image}
+            alt={item.name}
+            className={`rounded-md w-16 h-16 object-cover cursor-pointer hover:opacity-50  ${currentImageIndex === index ? "opacity-30 border-2 border-accent" : ""}`}
+          />
+        ))}
       </div>
       <button
-        onClick={() => setCurrentImage((prev) => prev - 1)}
-        disabled={currentImage <= 1}
+        onClick={() => setCurrentImageIndex((prev) => prev - 1)}
+        disabled={currentImageIndex <= 0}
         className={`${showModal && isModal ? "md:-left-4" : "md:hidden"} left-4  disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%] bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
       >
         <img src={PrevIcon} alt="previous icon" />
       </button>
       <button
-        onClick={() => setCurrentImage((prev) => prev + 1)}
-        disabled={currentImage >= items[0].images.length}
+        onClick={() => setCurrentImageIndex((prev) => prev + 1)}
+        disabled={currentImageIndex >= items.length - 1}
         className={`${showModal && isModal ? "md:-right-4" : "md:hidden"} right-4 disabled:cursor-not-allowed disabled:opacity-50 absolute top-[35%]  bg-base-100 rounded-full p-2 cursor-pointer hover:opacity-70`}
       >
         <img src={NextIcon} alt="next icon" />

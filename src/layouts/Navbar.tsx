@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 
-import CartIcon from "../../public/icons/icon-cart.svg";
-import MenuIcon from "../../public/icons/icon-menu.svg";
+import CartIcon from "../assets/icons/icon-cart.svg";
+import MenuIcon from "../assets/icons/icon-menu.svg";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { ThemeContext } from "../hooks/useTheme";
 import userImage from "../assets/images/image-avatar.png";
@@ -23,6 +23,7 @@ const Navbar = () => {
   const { data: carts = [] } = useQuery({
     queryKey: ["cart"],
     queryFn: fetchCart,
+    throwOnError: false,
   });
 
   if (!context) {
@@ -118,10 +119,10 @@ const Navbar = () => {
           </button>
           <button
             onClick={() => toggleShow("profile")}
-            className="w-8 cursor-pointer rounded-full hover:border-2 border-accent transition-all duration-500 tooltip tooltip-bottom"
+            className="w-8 h-8 cursor-pointer rounded-full hover:border-2 border-accent transition-all duration-500 tooltip tooltip-bottom"
             data-tip="Profile"
           >
-            <img src={userProfile} alt="user-image" />
+            <img src={userProfile} alt="user-image" className="rounded-full" />
           </button>
         </div>
       </div>

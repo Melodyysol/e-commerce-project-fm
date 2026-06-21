@@ -1,4 +1,4 @@
-import DeleteIcon from "../../../../public/icons/icon-delete.svg";
+import DeleteIcon from "../../../assets/icons/icon-delete.svg";
 import { motion, AnimatePresence } from "motion/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCart } from "../../../services/fetchCart";
@@ -69,7 +69,7 @@ export const Cart = () => {
                       <img
                         src={cart.products.image}
                         alt={cart.products.description}
-                        className="rounded-md w-12 object-cover"
+                        className="rounded-md w-12 h-12 object-cover"
                       />
                     </div>
                     <div>

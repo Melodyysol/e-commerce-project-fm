@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import CloseIcon from "../../public/icons/icon-close.svg";
+import CloseIcon from "../assets/icons/icon-close.svg";
 const Toast = ({
   message,
   type,

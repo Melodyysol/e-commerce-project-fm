@@ -21,6 +21,7 @@ export const HomePage = () => {
   } = useQuery({
     queryKey: ["product", search],
     queryFn: () => fetchProduct(search),
+    throwOnError: false,
   });
 
   let filteredProduct = [...products];

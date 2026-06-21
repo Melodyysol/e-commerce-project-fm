@@ -1,5 +1,6 @@
 // import { useContext } from "react";
 // import { CartContext } from "../hooks/useCart";
+import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./useToast";
 import { supabase } from "../lib/supabase";
 
@@ -12,9 +13,10 @@ export const useCart = () => {
 
   // return context;
 
+  const queryClient = useQueryClient();
   const toastContext = useToast();
 
-  const addToBag = async (productId: number) => {
+  const addToBag = async (productId: number, quantity = 1) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -37,7 +39,7 @@ export const useCart = () => {
     if (existingItem) {
       const { error } = await supabase
         .from("cart")
-        .update({ quantity: existingItem.quantity + 1 })
+        .update({ quantity: existingItem.quantity + quantity })
         .eq("id", existingItem.id);
 
       if (error) {
@@ -53,18 +55,19 @@ export const useCart = () => {
           message: `Increased sneaker quantity in cart!`,
         };
         toastContext.dispatch({ type: "success", payload: newToast });
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
       }
     } else {
       const { error } = await supabase.from("cart").insert({
         user_id: user.id,
         product_id: productId,
-        quantity: 1,
+        quantity,
       });
 
       if (error) {
         const newToast = {
           id: crypto.randomUUID(),
-          message: `"Error inserting item:", ${error.message}`,
+          message: `Error inserting item: ${error.message}`,
         };
         toastContext.dispatch({ type: "error", payload: newToast });
         return;
@@ -74,6 +77,7 @@ export const useCart = () => {
           message: `Sneaker added to cart!`,
         };
         toastContext.dispatch({ type: "success", payload: newToast });
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
       }
     }
   };
@@ -109,7 +113,8 @@ export const useCart = () => {
         id: crypto.randomUUID(),
         message: "Item removed from cart",
       };
-      toastContext.dispatch({ type: "error", payload: newToast });
+      toastContext.dispatch({ type: "success", payload: newToast });
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
     }
   };
 

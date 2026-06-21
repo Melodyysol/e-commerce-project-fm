@@ -1,12 +1,12 @@
-import CartIcon from "../../../../public/icons/icon-cart.svg";
-import MinusIcon from "../../../../public/icons/icon-minus.svg";
-import PlusIcon from "../../../../public/icons/icon-plus.svg";
+import CartIcon from "../../../assets/icons/icon-cart.svg";
+import MinusIcon from "../../../assets/icons/icon-minus.svg";
+import PlusIcon from "../../../assets/icons/icon-plus.svg";
 
 import { ProductImage } from "../../../components/ProductImage";
 import { useParams } from "react-router";
 import fetchProductItem from "../../../services/fetchProductItem";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loading } from "../../Loading";
 import { formatCurrency } from "../../../utilities/money";
 import { useToast } from "../../../custom-hooks/useToast";
@@ -20,6 +20,8 @@ export const RenderProductItem = () => {
 
   const photoId = itemId.id!;
 
+  const [quantity, setQuantity] = useState(1);
+
   const {
     data: item,
     isLoading,
@@ -28,6 +30,7 @@ export const RenderProductItem = () => {
   } = useQuery({
     queryKey: ["item"],
     queryFn: () => fetchProductItem(photoId),
+    throwOnError: false,
   });
 
   useEffect(() => {
@@ -87,16 +90,24 @@ export const RenderProductItem = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
             <div className="bg-base-200 rounded-md py-2 px-4 flex justify-between">
-              <button className="text-2xl text-accent cursor-pointer hover:opacity-70">
+              <button
+                type="button"
+                onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                className="text-2xl text-accent cursor-pointer hover:opacity-70"
+              >
                 <img src={MinusIcon} alt="minus icon" />
               </button>
-              <span>0</span>
-              <button className="text-2xl text-accent cursor-pointer hover:opacity-70">
+              <span>{quantity}</span>
+              <button
+                type="button"
+                onClick={() => setQuantity((prev) => prev + 1)}
+                className="text-2xl text-accent cursor-pointer hover:opacity-70"
+              >
                 <img src={PlusIcon} alt="plus icon" />
               </button>
             </div>
             <button
-              onClick={() => addToBag(item.id)}
+              onClick={() => addToBag(item.id, quantity)}
               type="button"
               className="btn btn-accent btn-block"
             >

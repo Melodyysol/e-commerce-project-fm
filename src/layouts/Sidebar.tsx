@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import CloseIcon from "../../public/icons/icon-close.svg";
+import CloseIcon from "../assets/icons/icon-close.svg";
 import { useCategory } from "../custom-hooks/useCategory";
 import { categoryItem, pageItem } from "../utilities/category";
 import { NavLink, useNavigate } from "react-router";

@@ -4,6 +4,7 @@ import { useCart } from "../../../custom-hooks/useCart";
 import type { Product } from "../../../schemas/productSchema";
 import { useToast } from "../../../custom-hooks/useToast";
 import { Loading } from "../../Loading";
+import Toast from "../../../components/Toast";
 
 export const RenderProduct = ({
   products,
@@ -43,7 +44,7 @@ export const RenderProduct = ({
         {products.map((product) => (
           <article
             key={product.id}
-            className="shadow hover:shadow-2xl cursor-pointer md:h-110"
+            className="shadow hover:shadow-2xl md:h-110"
           >
             <div>
               <img
@@ -71,6 +72,21 @@ export const RenderProduct = ({
               </div>
             </div>
           </article>
+        ))}
+      </div>
+      <div className=" gap-4 flex flex-col fixed top-5 left-0 right-0 pointer-events-none">
+        {toastContext.toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => {
+              toastContext.dispatch({
+                type: "removeToast",
+                payload: { id: toast.id },
+              });
+            }}
+          />
         ))}
       </div>
     </section>
